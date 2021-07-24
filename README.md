@@ -1,1 +1,1 @@
-study_flusk
+study_flask
