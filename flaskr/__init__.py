@@ -7,3 +7,4 @@ app.config.from_object('flaskr.config')
 db = SQLAlchemy(app)
 
 import flaskr.views
+
