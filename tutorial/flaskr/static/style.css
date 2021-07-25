@@ -40,12 +40,12 @@ body {
   .btn {
     display: inline-block;
     width: 10em;
-    padding: 1em 1em;
+    padding: 2em 2em;
     text-decoration: none;
     background: rgba(0,124,0,0.8);
     color: #ffffff;
     border-bottom: solid 4px #007c00;
-    border-radius: 3px;
+    border-radius: 10px;
   }
   
   .btn:active {/*ボタンを押したとき*/
