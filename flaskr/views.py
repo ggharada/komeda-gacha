@@ -1,7 +1,8 @@
 from flask import request, redirect, url_for, render_template, flash
-from flaskr import app, db
-from flaskr.models import Menu
+from flaskr import app
 import random
+import os
+import csv
 
 
 @app.route('/')
@@ -31,22 +32,29 @@ def balance():
     budget = 0
     dish = ["meal", "drink"]
 
-    #add meal and drink
-    for i in range(2):
-        candidate = db.session.query(Menu).filter(Menu.category == dish[i]).all()
-        food = random.choice(candidate)
-        menus.append(food)
-        text += str(food.name) + "\n"
-        budget += int(food.price)
-        calories += int(food.calories)
-
-    #add dessert
-    candidate = db.session.query(Menu).filter(Menu.type == "dessert", Menu.category == "side").all()
-    food = random.choice(candidate)
-    menus.append(food)
-    text += str(food.name) + "\n"
-    budget += int(food.price)
-    calories += int(food.calories)
+    # import csv
+    with open ('./flaskr/komeda.csv', "r", encoding="utf-8") as csv_file:
+        csv_reader = csv.reader(csv_file)
+        list_of_rows = list(csv_reader)
+    # add meal and drink
+    while len(menus) < 2:
+        candidate = random.choice(list_of_rows)
+        if candidate[2] != dish[len(menus)]:
+            continue
+        menus.append(candidate)
+        text += str(candidate[1]) + "\n"
+        budget += int(candidate[4])
+        calories += int(candidate[5])
+    # add dessert
+    while len(menus) < 3:
+        candidate = random.choice(list_of_rows)
+        if candidate[2] == "side" and candidate[3] == "dessert":
+            menus.append(candidate)
+            text += str(candidate[1]) + "\n"
+            budget += int(candidate[4])
+            calories += int(candidate[5])
+        else:
+            continue
 
     # tweet result
     text += "\n"
@@ -62,45 +70,21 @@ def get_menus(money):
     budget = money
     calories = 0
 
-    # select first food
-    while not menus:
-        rand = random.randrange(
-            0, db.session.query(Menu.id).count()) + 1
-        menus = db.session.query(Menu).filter(
-            Menu.id == rand, Menu.price <= budget).all()
+    # import csv
+    with open ('./flaskr/komeda.csv', "r", encoding="utf-8") as csv_file:
+        csv_reader = csv.reader(csv_file)
+        list_of_rows = list(csv_reader)
+    
 
-    # calc
-    budget -= int(menus[0].price)
-    calories += int(menus[0].calories)
-
-    # add text for tweet
-    text += str(menus[0].name) + "\n"
-
-    while budget > 0:
+    while budget > 240:
 
         # avalable food candidate
-        candidate = db.session.query(Menu).filter(Menu.price <= budget).all()
+        candidate = random.choice(list_of_rows)
 
-        # no candidate break
-        if not candidate:
-            break
-
-        # select food
-        food = random.choice(candidate)
-
-        #被り防止
-        if food in menus:
-            break
-
-        # add to list
-        menus.append(food)
-
-        # add text for tweet
-        text += str(food.name) + "\n"
-
-        # calc
-        budget -= int(food.price)
-        calories += int(food.calories)
+        menus.append(candidate)
+        text += str(candidate[1]) + "\n"
+        budget += int(candidate[4])
+        calories += int(candidate[5])
 
     budget = money - budget
 
