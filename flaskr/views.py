@@ -73,16 +73,14 @@ def get_menus(money):
     with open ('./flaskr/komeda.csv', "r", encoding="utf-8") as csv_file:
         csv_reader = csv.reader(csv_file)
         list_of_rows = list(csv_reader)
-    
 
     while budget > 240:
-
-        # avalable food candidate
         candidate = random.choice(list_of_rows)
-
+        if int(candidate[4]) > budget:
+            continue
         menus.append(candidate)
         text += str(candidate[1]) + "\n"
-        budget += int(candidate[4])
+        budget -= int(candidate[4])
         calories += int(candidate[5])
 
     budget = money - budget
