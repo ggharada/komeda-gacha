@@ -87,6 +87,6 @@ def get_menus(money):
 
     # tweet result
     text += "\n"
-    text += "計" + str(budget) + "円 " + str(calories) + "kcal" + "\n" + "#コメダ珈琲ガチャ" + "\n" 
+    text += "計" + str(budget) + "円 " + str(calories) + "kcal" + "\n" + "#コメダ珈琲おまかせガチャ" + "\n" 
 
     return render_template('show_menus.html', menus=menus, budget=budget, calories=calories, text=text)
