@@ -1,5 +1,4 @@
 # コメダ珈琲おまかせガチャ
-### Video Demo:  https://youtu.be/JOiGcSinTeY
 ### URL: https://komeda-gacha.herokuapp.com
 
 #### Description:
